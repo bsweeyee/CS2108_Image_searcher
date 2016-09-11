@@ -13,8 +13,8 @@ A brief outline of what is to be done:
     column: vector extracted from feature extractor programme
    
     Save the csv file and name it according to its respective feature
-   
-2. When a user selects an image to be searched:
+    
+ 2. When a user selects an image to be searched:
 
       a. take query image and run it with a feature extractor software
       
@@ -27,23 +27,14 @@ A brief outline of what is to be done:
          
       e. get the top 16 images, and show to user
 
-3. Allow user to select which features to use during image search
+ 3. Allow user to select which features to use during image search
 
-4. UI improvements
+ 4. UI improvements
   
   An example:
-  I have 4 feature extractor:
-
-  Visual keyword
+  I have 4 feature extractor: Visual keyword, Visual Concept, Text, Color histogram
   
-  Visual Concept
-  
-  Text
-  
-  Color histogram
-  
-  I have a database of 1000 images:
-  image_one.jpg, image_two.jpg, ... image_one_thousand.jpg
+  I have a database of 1000 images: image_one.jpg, image_two.jpg, ... image_one_thousand.jpg
   
   1. for each feature, i run it through all the images in the database to get a csv file
      
@@ -76,11 +67,8 @@ A brief outline of what is to be done:
      image_one and query    similarity_value_1
      
      image_two and query    similarity_value_2
-                        .
 
-                        .
- 
-                        .
+                        . . .
 
      image_one_thousand and query    similarity_value_1000
   
