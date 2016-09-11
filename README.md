@@ -41,13 +41,13 @@ A brief outline of what is to be done:
      
      what should be inside a csv file:
      
-     image_one.jpg    value 1, value 2, value 3 ...
+     image_one.jpg:    value 1, value 2, value 3 ...
      
-     image_two.jpg    value 1, value 2, value 3 ...
+     image_two.jpg:    value 1, value 2, value 3 ...
      
      ...              ...
      
-     image_one_thousand.jpg   value 1, value 2, value 3 ...
+     image_one_thousand.jpg:   value 1, value 2, value 3 ...
   
   2. User selects an image he wants to search
   
@@ -55,19 +55,19 @@ A brief outline of what is to be done:
      
      what should be returned after running feature extractor:
      
-     query.jpg    value 1, value 2, ...
+     query.jpg:    value 1, value 2, ...
      
      Take the results, do a similarity computation with every image in the associated feature
      
      Similarity results for a single feature:
      
-     image_one and query    similarity_value_1
+     image_one and query:    similarity_value_1
      
-     image_two and query    similarity_value_2
+     image_two and query:    similarity_value_2
 
      ...
 
-     image_one_thousand and query    similarity_value_1000
+     image_one_thousand and query:    similarity_value_1000
   
   3. for every image:
   
