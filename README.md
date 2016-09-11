@@ -2,7 +2,8 @@
 Code and stuff for CS2108!
 
 A brief outline of what is to be done:
-1. For each feature (i.e color histogram, deep learning (Visual Concept), SIFT extractor (Visual Keywords), text (image tags)),
+
+ 1.For each feature (i.e color histogram, deep learning (Visual Concept), SIFT extractor (Visual Keywords), text (image tags)),
    extract a csv file. 
    CSV file:
    row: image name
