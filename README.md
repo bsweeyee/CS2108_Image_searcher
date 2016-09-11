@@ -31,7 +31,7 @@ A brief outline of what is to be done:
 
  4. UI improvements
   
-  <b>An example:<b>
+  <b>An example:</b>
   
   I have 4 feature extractor: Visual keyword, Visual Concept, Text, Color histogram
   
