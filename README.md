@@ -30,6 +30,8 @@ A brief outline of what is to be done:
  3. Allow user to select which features to use during image search
 
  4. UI improvements
+ 
+ 5. Do analysis by computing F1 score = 2 * (precision * recall) / (precision + recall) 
   
   <b>An example:</b>
   
