@@ -31,7 +31,8 @@ A brief outline of what is to be done:
 
  4. UI improvements
   
-  An example:
+  <b>An example:<b>
+  
   I have 4 feature extractor: Visual keyword, Visual Concept, Text, Color histogram
   
   I have a database of 1000 images: image_one.jpg, image_two.jpg, ... image_one_thousand.jpg
@@ -44,11 +45,7 @@ A brief outline of what is to be done:
      
      image_two.jpg    value 1, value 2, value 3 ...
      
-     .                            .
-     
-     .                            .
-     
-     .                            .
+     ...              ...
      
      image_one_thousand.jpg   value 1, value 2, value 3 ...
   
@@ -68,7 +65,7 @@ A brief outline of what is to be done:
      
      image_two and query    similarity_value_2
 
-                        . . .
+     ...
 
      image_one_thousand and query    similarity_value_1000
   
