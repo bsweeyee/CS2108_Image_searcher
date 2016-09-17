@@ -14,8 +14,16 @@ class UI_class:
         self.master = master
         self.database_image_ids = database.get_image_ids()
         self.limit = 10
-        topframe = Frame(self.master)
+        topframe = Frame(self.master, padx=240)
         topframe.pack()
+
+        #query and result img frame
+        self.query_img_frame = 0
+        self.result_img_frame = 0
+
+        #checkbox variables
+        self.color_var = IntVar()
+        self.deep_learning_var = IntVar()
 
         #Buttons
         topspace = Label(topframe).grid(row=0, columnspan=2)
@@ -23,11 +31,22 @@ class UI_class:
         self.bbutton.grid(row=1, column=1)
         self.cbutton = Button(topframe, text=" Search ", command=self.show_results_imgs)
         self.cbutton.grid(row=1, column=2)
-        downspace = Label(topframe).grid(row=3, columnspan=4)
+
+        self.cbox_color = Checkbutton(topframe, text="Color histogram", variable=self.color_var, onvalue=1, offvalue=0)
+        self.cbox_color.grid(row=2, column=1)
+        self.cbox_color = Checkbutton(topframe, text="Deep learning", variable=self.deep_learning_var, onvalue=1, offvalue=0)
+        self.cbox_color.grid(row=2, column=2)
+
+        downspace = Label(topframe).grid(row=4, columnspan=4)
 
         self.master.mainloop()
 
     def browse_query_img(self):
+        if (self.query_img_frame != 0):
+            self.query_img_frame.destroy()
+
+        if (self.result_img_frame != 0):
+            self.result_img_frame.destroy()
 
         self.query_img_frame = Frame(self.master)
         self.query_img_frame.pack()
@@ -52,6 +71,9 @@ class UI_class:
 
 
     def show_results_imgs(self):
+        if (self.result_img_frame != 0):
+            self.result_img_frame.destroy()
+        
         self.result_img_frame = Frame(self.master)
         self.result_img_frame.pack()
 
@@ -64,34 +86,49 @@ class UI_class:
         searcher = Searcher("./color_hist.csv")
         deep_learning = Deep_Learning("./deep_learning.csv")
         
-        color_hist_dict = searcher.search(self.queryfeatures)
-        deep_learning_dict = deep_learning.search_deeplearning(os.path.abspath(self.filename))
+        color_hist_dict = {}
+        deep_learning_dict = {}
         
+        if (self.color_var.get() == 1):
+            color_hist_dict = searcher.search(self.queryfeatures)
+        
+        if (self.deep_learning_var.get() == 1):
+            deep_learning_dict = deep_learning.search_deeplearning(os.path.abspath(self.filename))
+
         #combine feature vectors here in a results array
         for name in self.database_image_ids:
-            results[name] = hyper_parameter[0] * color_hist_dict[name] + hyper_parameter[1] * deep_learning_dict[name]  
+            results[name] = 0
+            if (len(color_hist_dict) > 0):
+                results[name] += hyper_parameter[0] * color_hist_dict[name]
+            if (len(deep_learning_dict) > 0):
+                results[name] += hyper_parameter[1] * deep_learning_dict[name]  
 
         #sort results and show only top 10
-        results = sorted([(v, k) for (k, v) in results.items()])
-        results = results[:self.limit]
+        if (len(results) > 0):
+            results = sorted([(v, k) for (k, v) in results.items()])
+            results = results[:self.limit]
 
         # show result pictures
         COLUMNS = 5
         image_count = 0
         image_paths = database.get_image_paths()
+
+       
         for (score, resultID) in results:
             # load the result image and display it
-            image_count += 1
-            r, c = divmod(image_count - 1, COLUMNS)
-            for image in image_paths:
-                if os.path.exists(image + "/" + resultID):
-                    im = Image.open(image + "/" + resultID)
-            
-            resized = im.resize((100, 100), Image.ANTIALIAS)
-            tkimage = ImageTk.PhotoImage(resized)
-            myvar = Label(self.result_img_frame, image=tkimage)
-            myvar.image = tkimage
-            myvar.grid(row=r, column=c)
+            if (score != 0):
+                image_count += 1
+                r, c = divmod(image_count - 1, COLUMNS)
+                for image in image_paths:
+                    if os.path.exists(image + "/" + resultID):
+                        im = Image.open(image + "/" + resultID)
+                
+                resized = im.resize((100, 100), Image.ANTIALIAS)
+                tkimage = ImageTk.PhotoImage(resized)
+                myvar = Label(self.result_img_frame, image=tkimage)
+                myvar.image = tkimage
+                myvar.grid(row=r, column=c)
+   
 
         self.result_img_frame.mainloop()
 

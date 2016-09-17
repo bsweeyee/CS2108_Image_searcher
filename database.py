@@ -10,6 +10,8 @@ import tensorflow as tf
 # returns a list of image category folder paths from "database" folder
 # eg. '...something.../database/alley'
 
+STUPID_DS_STORE = "/Users/Brandon/Dropbox/NUS/Y3S1/CS2108/Lab/Assignment_1/Our_Image_Searcher/database/.DS_Store"
+
 def get_image_paths():
 	i = 1
 	file_path =  os.listdir(os.getcwd())[0]
