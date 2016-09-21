@@ -1,19 +1,20 @@
 # import the necessary packages
+import os, sys
+import cv2
+import tkFileDialog
+import utility.util as util
+
+from Tkinter import *
 from pyimagesearch.colordescriptor import ColorDescriptor
 from pyimagesearch.searcher import Searcher
-import cv2
-from Tkinter import *
-import tkFileDialog
 from PIL import Image, ImageTk
-from deep_learning import Deep_Learning
-import database
-import os, sys
+from deeplearning.deep_learning import Deep_Learning
 
 class UI_class:
     def __init__(self, master):
         self.master = master
-        self.database_image_ids = database.get_image_ids()
-        self.limit = 10
+        self.database_image_ids = util.get_image_ids()
+        self.limit = 16
         topframe = Frame(self.master, padx=240)
         topframe.pack()
 
@@ -38,6 +39,10 @@ class UI_class:
         self.cbox_color.grid(row=2, column=2)
 
         downspace = Label(topframe).grid(row=4, columnspan=4)
+
+        #Feature objects
+        self.color_hist = Searcher("./color_hist.csv")
+        self.deep_learning = Deep_Learning("./deep_learning.csv")
 
         self.master.mainloop()
 
@@ -83,25 +88,36 @@ class UI_class:
         # feature 2: deep learning
         hyper_parameter = [0.2, 0.8]
         
-        searcher = Searcher("./color_hist.csv")
-        deep_learning = Deep_Learning("./deep_learning.csv")
-        
         color_hist_dict = {}
         deep_learning_dict = {}
         
+        # do dictionary extraction here
         if (self.color_var.get() == 1):
-            color_hist_dict = searcher.search(self.queryfeatures)
+            color_hist_dict = self.color_hist.search(self.queryfeatures)
         
         if (self.deep_learning_var.get() == 1):
-            deep_learning_dict = deep_learning.search_deeplearning(os.path.abspath(self.filename))
+            deep_learning_dict = self.deep_learning.search_deeplearning(os.path.abspath(self.filename))
+
 
         #combine feature vectors here in a results array
+        # if 0 should, should still be shown since it means they are exactly the same
+        # if -1, then should be removed from array
         for name in self.database_image_ids:
-            results[name] = 0
+            results[name] = -1
             if (len(color_hist_dict) > 0):
-                results[name] += hyper_parameter[0] * color_hist_dict[name]
+                if name in color_hist_dict:
+                    if results[name] < 0:
+                        results[name] = 0
+                    results[name] += hyper_parameter[0] * color_hist_dict[name]
+            
             if (len(deep_learning_dict) > 0):
-                results[name] += hyper_parameter[1] * deep_learning_dict[name]  
+                if name in deep_learning_dict:
+                    if results[name] < 0:
+                        results[name] = 0
+                    results[name] += hyper_parameter[1] * deep_learning_dict[name]
+            
+            if results[name] == -1:
+                del results[name]
 
         #sort results and show only top 10
         if (len(results) > 0):
@@ -109,14 +125,14 @@ class UI_class:
             results = results[:self.limit]
 
         # show result pictures
-        COLUMNS = 5
+        COLUMNS = 4
         image_count = 0
-        image_paths = database.get_image_paths()
+        image_paths = util.get_image_paths()
 
        
         for (score, resultID) in results:
             # load the result image and display it
-            if (score != 0):
+            if (score >= 0):
                 image_count += 1
                 r, c = divmod(image_count - 1, COLUMNS)
                 for image in image_paths:
@@ -131,7 +147,6 @@ class UI_class:
    
 
         self.result_img_frame.mainloop()
-
 
 root = Tk()
 window = UI_class(root)

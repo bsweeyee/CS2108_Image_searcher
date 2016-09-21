@@ -4,10 +4,11 @@ import argparse
 import glob
 import cv2
 import os, sys
-import database
+import utility.util as util
+
 
 #the appended list of directories
-all_image_paths = database.image_paths()
+all_image_paths = util.image_paths()
 
 # initialize the color descriptor
 cd = ColorDescriptor((8, 12, 3))

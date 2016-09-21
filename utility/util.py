@@ -1,11 +1,10 @@
 import os, sys
-import classify_image
 import csv
-import numpy as np
-import tensorflow as tf
 
-# A bunch of functions that manipulates csv vector files
-# and images in database
+""" A utility module with a bunch of functions that 
+	manipulates csv vector files
+ 	and images in database
+""" 
 
 # returns a list of image category folder paths from "database" folder
 # eg. '...something.../database/alley'
