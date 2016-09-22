@@ -58,13 +58,6 @@ class UI_class:
         from tkFileDialog import askopenfilename
         self.filename = tkFileDialog.askopenfile(title='Choose an Image File').name
 
-        # process query image to feature vector
-        # initialize the image descriptor
-        cd = ColorDescriptor((8, 12, 3))
-        # load the query image and describe it
-        query = cv2.imread(self.filename)
-        self.queryfeatures = cd.describe(query)
-
         # show query image
         image_file = Image.open(self.filename)
         resized = image_file.resize((100, 100), Image.ANTIALIAS)
@@ -74,7 +67,6 @@ class UI_class:
 
         self.query_img_frame.mainloop()
 
-
     def show_results_imgs(self):
         if (self.result_img_frame != 0):
             self.result_img_frame.destroy()
@@ -82,6 +74,32 @@ class UI_class:
         self.result_img_frame = Frame(self.master)
         self.result_img_frame.pack()
 
+        results = self.get_search_results()
+
+        # show result pictures
+        COLUMNS = 4
+        image_count = 0
+        image_paths = util.get_image_paths()
+       
+        for (score, resultID) in results:
+            # load the result image and display it
+            if (score >= 0):
+                image_count += 1
+                r, c = divmod(image_count - 1, COLUMNS)
+                for image in image_paths:
+                    if os.path.exists(image + "/" + resultID):
+                        im = Image.open(image + "/" + resultID)
+                
+                resized = im.resize((100, 100), Image.ANTIALIAS)
+                tkimage = ImageTk.PhotoImage(resized)
+                myvar = Label(self.result_img_frame, image=tkimage)
+                myvar.image = tkimage
+                myvar.grid(row=r, column=c)
+   
+
+        self.result_img_frame.mainloop()
+
+    def get_search_results(self):
         results = {}
         # perform the search
         # feature 1: color histogram
@@ -93,11 +111,16 @@ class UI_class:
         
         # do dictionary extraction here
         if (self.color_var.get() == 1):
+             # process query image to feature vector
+            # initialize the image descriptor
+            cd = ColorDescriptor((8, 12, 3))
+            # load the query image and describe it
+            query = cv2.imread(self.filename)
+            self.queryfeatures = cd.describe(query)
             color_hist_dict = self.color_hist.search(self.queryfeatures)
         
         if (self.deep_learning_var.get() == 1):
             deep_learning_dict = self.deep_learning.search_deeplearning(os.path.abspath(self.filename))
-
 
         #combine feature vectors here in a results array
         # if 0 should, should still be shown since it means they are exactly the same
@@ -124,29 +147,15 @@ class UI_class:
             results = sorted([(v, k) for (k, v) in results.items()])
             results = results[:self.limit]
 
-        # show result pictures
-        COLUMNS = 4
-        image_count = 0
-        image_paths = util.get_image_paths()
+        return results
 
-       
-        for (score, resultID) in results:
-            # load the result image and display it
-            if (score >= 0):
-                image_count += 1
-                r, c = divmod(image_count - 1, COLUMNS)
-                for image in image_paths:
-                    if os.path.exists(image + "/" + resultID):
-                        im = Image.open(image + "/" + resultID)
-                
-                resized = im.resize((100, 100), Image.ANTIALIAS)
-                tkimage = ImageTk.PhotoImage(resized)
-                myvar = Label(self.result_img_frame, image=tkimage)
-                myvar.image = tkimage
-                myvar.grid(row=r, column=c)
-   
-
-        self.result_img_frame.mainloop()
+    # return image results from search
+    def get_image_search_results(self, file_path, color_var=0, deep_learning_var=0):
+        self.filename = file_path
+        self.color_var.set(color_var)
+        self.deep_learning_var.set(deep_learning_var)
+        return self.get_search_results()
+        
 
 root = Tk()
 window = UI_class(root)

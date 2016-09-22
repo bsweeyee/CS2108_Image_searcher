@@ -52,7 +52,8 @@ class Deep_Learning:
 		returns an unsorted list of similarity vector for every image
 	"""
 	def search_deeplearning(self, query_path):
-		query_data = classify_image.run_inference_on_image(query_path)
+		with tf.Graph().as_default():
+			query_data = classify_image.run_inference_on_image(query_path)
 		
 		# uses linear search
 		image_similarity = self.compute_similarity(query_data.tolist())
