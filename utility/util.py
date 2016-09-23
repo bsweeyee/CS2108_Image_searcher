@@ -15,7 +15,9 @@ STUPID_DS_STORE = "/Users/Brandon/Dropbox/NUS/Y3S1/CS2108/Lab/Assignment_1/Our_I
 database_path = "/Users/Brandon/Dropbox/NUS/Y3S1/CS2108/Lab/Assignment_1/Our_Image_Searcher/database"
 query_path = "/Users/Brandon/Dropbox/NUS/Y3S1/CS2108/Lab/Assignment_1/Our_Image_Searcher/query"
 
-def get_image_paths():
+# returns a list of image paths from database
+# eg. ...something.../database/alley
+def get_image_group_paths():
 	i = 1
 
 	data_path = database_path
@@ -34,7 +36,7 @@ def get_image_paths():
 # eg. '...something.../database/alley/0028_1070815604.jpg'
 
 def get_jpg_paths():
-	image_paths_array = get_image_paths()
+	image_paths_array = get_image_group_paths()
 	jpg_paths = []
 	
 	for i in xrange(len(image_paths_array)):
@@ -50,7 +52,7 @@ def get_jpg_paths():
 def get_image_ids():
 	image_ids = []
 
-	image_paths = get_image_paths()
+	image_paths = get_image_group_paths()
 	for i in xrange(len(image_paths)):
 		a_image_path = os.listdir(image_paths[i])
 		for j in xrange(len(a_image_path)):
@@ -62,21 +64,20 @@ def get_image_ids():
 # eg. 'alley'
 
 def get_image_groups():
-	image_paths = get_image_paths()
+	image_paths = get_image_group_paths()
 	image_group = []
 	for image in image_paths:
 		image_group.append(os.path.basename(image))
 
 	return image_group
 
-# returns a dictionary of jpg path in an image group
+# returns a dictionary of {"category name": [list of jpg paths]}
 # eg. {'alley':[something.../alley/1_jpg, something.../alley/2_jpg, ...], 'horses':[something.../horses/1_jpg, something.../horses/2_jpg,...], ...}
-def get_query_image_groups_path_jpg(input_path):
+
+def get_image_groups_path_jpg(input_path):
 	image_groups = get_image_groups()
-	image_group_path = []
+	image_group_path = get_image_group_paths()
 	result_list = {}
-	for group_name in image_groups:
-		image_group_path.append(os.path.join(input_path, group_name))
 
 	for i in xrange(len(image_group_path)):
 		if image_group_path[i] != STUPID_DS_STORE:
@@ -90,8 +91,8 @@ def get_query_image_groups_path_jpg(input_path):
 
 	return result_list
 
-#print get_query_image_groups_path_jpg()
-#print get_image_paths()
+#print get_image_groups_path_jpg(database_path)
+#print get_image_group_paths()
 #output_vectors()
 #print "Done!"
 		

@@ -3,8 +3,8 @@ import utility.util as util
 from Tkinter import *
 from UI_search import UI_class
 
-all_database_category_paths = util.get_query_image_groups_path_jpg(util.database_path)
-all_query_category_paths = util.get_query_image_groups_path_jpg(util.query_path)
+all_database_category_paths = util.get_image_groups_path_jpg(util.database_path)
+all_query_category_paths = util.get_image_groups_path_jpg(util.query_path)
 
 def search_and_write_all_categories(window):
 
