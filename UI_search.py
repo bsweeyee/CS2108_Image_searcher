@@ -144,6 +144,8 @@ class UI_class:
         # perform the search
         # feature 1: color histogram
         # feature 2: deep learning
+        # feature 3: text tag
+        # feature 4: visual words
         self.hyper_parameter = [0.1, 0.8, 0.1, 0.0]
 
         if self.color_parameter.get():
@@ -185,6 +187,8 @@ class UI_class:
         # checkbox must be checked and there must be query tags before search is done
         if (self.text_tags_var.get() == 1 and self.text_tag.return_query_tags(self.filename)):
             text_tags_dict = self.text_tag.tags_search(self.filename)
+
+        # run visual words
 
         #combine feature vectors here in a results array
         # if 0 should, should still be shown since it means they are exactly the same
