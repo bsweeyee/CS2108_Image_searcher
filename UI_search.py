@@ -4,6 +4,7 @@ import cv2
 import tkFileDialog
 import utility.util as util
 import math
+import SIFTquery as sift
 
 from Tkinter import *
 from colorhistogram.colordescriptor import ColorDescriptor
@@ -146,7 +147,7 @@ class UI_class:
         # feature 2: deep learning
         # feature 3: text tag
         # feature 4: visual words
-        self.hyper_parameter = [0.1, 0.8, 0.1, 0.0]
+        self.hyper_parameter = [0.1, 0.6, 0.1, 0.2]
 
         if self.color_parameter.get():
             color_param = float(self.color_parameter.get())
@@ -155,12 +156,12 @@ class UI_class:
         if self.text_tags_parameter.get():
             text_tag_param = float(self.text_tags_parameter.get())
 
-        if (self.color_parameter.get() and self.deep_learning_parameter.get() and self.text_tags_parameter.get()):
-            if (math.fabs(1 - (color_param + deep_learning_param + text_tag_param)) < 0.0000001):
+        if (self.color_parameter.get() and self.deep_learning_parameter.get() and self.text_tags_parameter.get() and self.visual_words_parameter.get()):
+            if (math.fabs(1 - (color_param + deep_learning_param + text_tag_param + visual_words_param)) < 0.0000001):
                 self.hyper_parameter[0] = color_param
                 self.hyper_parameter[1] = deep_learning_param
                 self.hyper_parameter[2] = text_tag_param
-                #self.hyper_parameter[3] = visual_words_param      
+                self.hyper_parameter[3] = visual_words_param      
 
     def get_search_results(self):
         results = {}
@@ -168,6 +169,7 @@ class UI_class:
         color_hist_dict = {}
         deep_learning_dict = {}
         text_tags_dict = {}
+        visual_words_dict = {}
 
         self.check_hyper_parameters()
         
@@ -189,6 +191,8 @@ class UI_class:
             text_tags_dict = self.text_tag.tags_search(self.filename)
 
         # run visual words
+        if (self.visual_words_var.get() == 1):
+            visual_words_dict = sift.newQuery(os.path.abspath(self.filename))
 
         #combine feature vectors here in a results array
         # if 0 should, should still be shown since it means they are exactly the same
@@ -206,7 +210,12 @@ class UI_class:
             if text_tags_dict:
                 if results[name] < 0:
                     results[name] = 0
-                results[name] += self.hyper_parameter[2] * text_tags_dict[name]                
+                results[name] += self.hyper_parameter[2] * text_tags_dict[name]
+            if visual_words_dict:
+                if results[name] < 0:
+                    results[name] = 0
+                results[name] += self.hyper_parameter[3] * visual_words_dict[name]
+
 
         #sort results and show only top 16
         if (len(results) > 0):
@@ -221,11 +230,12 @@ class UI_class:
         return results
 
     # return image results from search
-    def get_image_search_results(self, file_path, color_var=0, deep_learning_var=0, text_tags_var=0):
+    def get_image_search_results(self, file_path, color_var=0, deep_learning_var=0, text_tags_var=0, visual_words_var=0):
         self.filename = file_path
         self.color_var.set(color_var)
         self.deep_learning_var.set(deep_learning_var)
         self.text_tags_var.set(text_tags_var)
+        self.visual_words_var.set(visual_words_var)
         return self.get_search_results()
         
 
