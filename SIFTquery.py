@@ -12,7 +12,7 @@ import math
 DATABASEPATH =  "database"
 
 def newQuery(img_path):
-    img_path = "classify.py " + img_path
+    img_path = "python classify.py " + img_path
     os.system(img_path)
     
     #read testdata.svm into query_array
@@ -33,11 +33,10 @@ def newQuery(img_path):
     f_trainingdata.close()
 
     #load all jpg paths into f_names
-    f_names = util.get_image_ids(DATABASEPATH)
+    f_names = util.get_image_ids(util.database_path)
     
     dictionary = {}
     dictionary = dict(zip(f_names, distances))
-    print dictionary
     
     return dictionary
     

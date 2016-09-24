@@ -67,6 +67,6 @@ def create_tag_csv(input_path, tag_text):
 # run this to generate tag csv
 #create_tag_csv(util.query_path, test_tags)
 #create_tag_csv(util.database_path, train_tags)
-#tag_lists =  create_list_of_tags(stem_words(extract_tags(train_tags)))
-#print len(tag_lists)
+tag_lists =  create_list_of_tags(stem_words(extract_tags(train_tags)))
+print len(tag_lists)
 

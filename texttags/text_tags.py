@@ -7,6 +7,7 @@ class TextTags(object):
 	def __init__(self, database_tags_list, query_tags_list):
 		self.database_tags_list = database_tags_list
 		self.query_tags_list = query_tags_list
+		self.total_number_of_tags = 7177
 
 	# search image tags
 	def tags_search(self, query):
@@ -24,7 +25,7 @@ class TextTags(object):
 					# calculate tag distance
 					text_tag_dist[image_name] = self.calculate_distance(query_tags, image_database_tags)
 				else:
-					text_tag_dist[image_name] = math.sqrt(7000)
+					text_tag_dist[image_name] = math.sqrt(self.total_number_of_tags)
 
 		return text_tag_dist
 
@@ -51,7 +52,7 @@ class TextTags(object):
 			if tag in database_tags:
 				count += 1.0
 
-		return math.sqrt(7000 - count)
+		return math.sqrt(self.total_number_of_tags - count)
 
 #text_tag = TextTags("./tag_text_database.csv", "./tag_text_query.csv")
 #print text_tag.tags_search("./0018_375723120.jpg")

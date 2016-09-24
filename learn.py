@@ -44,6 +44,7 @@ def extractSift(input_files):
     all_features_dict = {}
     for i, fname in enumerate(input_files):
         features_fname = fname + '.sift'
+        print features_fname
         if exists(features_fname) == False:
             print "calculating sift features for", fname
             sift.process_image(fname, features_fname)

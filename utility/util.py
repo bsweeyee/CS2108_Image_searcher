@@ -89,7 +89,8 @@ def get_image_groups_path_jpg(input_path):
 				image_list.pop(0)
 			image_list_path = []
 			for image_name in image_list:
-				image_list_path.append(os.path.join(image_group_path[i], image_name))
+				if (image_name.endswith('.jpg')):
+					image_list_path.append(os.path.join(image_group_path[i], image_name))
 			result_list[image_groups[i]] = image_list_path
 
 	return result_list

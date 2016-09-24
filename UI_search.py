@@ -147,21 +147,22 @@ class UI_class:
         # feature 2: deep learning
         # feature 3: text tag
         # feature 4: visual words
-        self.hyper_parameter = [0.1, 0.6, 0.1, 0.2]
+        self.hyper_parameter = [0.0, 0.0, 0.0, 0.0]
 
-        if self.color_parameter.get():
-            color_param = float(self.color_parameter.get())
-        if self.deep_learning_parameter.get():
-            deep_learning_param = float(self.deep_learning_parameter.get())
-        if self.text_tags_parameter.get():
-            text_tag_param = float(self.text_tags_parameter.get())
+        if self.color_parameter.get() and self.color_var.get() == 1:
+            self.hyper_parameter[0] = float(self.color_parameter.get())
+        if self.deep_learning_parameter.get() and self.deep_learning_var.get() == 1:
+            self.hyper_parameter[1] = float(self.deep_learning_parameter.get())
+        if self.text_tags_parameter.get() and self.text_tags_var.get() == 1:
+            self.hyper_parameter[2] = float(self.text_tags_parameter.get())
+        if self.visual_words_parameter.get() and self.visual_words_var.get() == 1:
+            self.hyper_parameter[3] = float(self.visual_words_parameter.get())
 
-        if (self.color_parameter.get() and self.deep_learning_parameter.get() and self.text_tags_parameter.get() and self.visual_words_parameter.get()):
-            if (math.fabs(1 - (color_param + deep_learning_param + text_tag_param + visual_words_param)) < 0.0000001):
-                self.hyper_parameter[0] = color_param
-                self.hyper_parameter[1] = deep_learning_param
-                self.hyper_parameter[2] = text_tag_param
-                self.hyper_parameter[3] = visual_words_param      
+        if (math.fabs(1 - (self.hyper_parameter[0] + self.hyper_parameter[1] + self.hyper_parameter[2] + self.hyper_parameter[3])) > 0.0000001):     
+            self.hyper_parameter[0] = 0.08
+            self.hyper_parameter[1] = 0.70
+            self.hyper_parameter[2] = 0.19
+            self.hyper_parameter[3] = 0.03
 
     def get_search_results(self):
         results = {}
@@ -192,7 +193,7 @@ class UI_class:
 
         # run visual words
         if (self.visual_words_var.get() == 1):
-            visual_words_dict = sift.newQuery(os.path.abspath(self.filename))
+            visual_words_dict = sift.newQuery(self.filename)
 
         #combine feature vectors here in a results array
         # if 0 should, should still be shown since it means they are exactly the same
