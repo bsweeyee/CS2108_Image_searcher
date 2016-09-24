@@ -3,7 +3,6 @@ import sift
 from glob import glob
 from numpy import zeros, resize, sqrt, histogram, hstack, vstack, savetxt, zeros_like
 import scipy.cluster.vq as vq
-import libsvm
 from cPickle import dump, HIGHEST_PROTOCOL
 import argparse
 
@@ -41,22 +40,23 @@ def get_imgfiles(path):
 
 
 def extractSift(input_files):
-    print "extracting Sift features"
+    print "extracting Sift features..."
     all_features_dict = {}
     for i, fname in enumerate(input_files):
         features_fname = fname + '.sift'
         if exists(features_fname) == False:
             print "calculating sift features for", fname
             sift.process_image(fname, features_fname)
-        print "gathering sift features for", fname,
+        #print "gathering sift features for", fname,
         locs, descriptors = sift.read_features_from_file(features_fname)
-        print descriptors.shape
+        #print descriptors.shape
         all_features_dict[fname] = descriptors
     return all_features_dict
 
 
 def dict2numpy(dict):
     nkeys = len(dict)
+    print "nkeys = " + str(nkeys)
     array = zeros((nkeys * PRE_ALLOCATION_BUFFER, 128))
     pivot = 0
     for key in dict.keys():
@@ -103,6 +103,7 @@ if __name__ == '__main__':
     datasetpath = args.d
     cats = get_categories(datasetpath)
     ncats = len(cats)
+    #array = zeros((500 * PRE_ALLOCATION_BUFFER, 128))
     print "searching for folders at " + datasetpath
     if ncats < 1:
         raise ValueError('Only ' + str(ncats) + ' categories found. Wrong path?')
@@ -152,14 +153,4 @@ if __name__ == '__main__':
                           datasetpath + HISTOGRAMS_FILE)
 
     print "---------------------"
-    print "## train svm"
-    c, g, rate, model_file = libsvm.grid(datasetpath + HISTOGRAMS_FILE,
-                                         png_filename='grid_res_img_file.png')
-
-    print "--------------------"
-    print "## outputting results"
-    print "model file: " + datasetpath + model_file
-    print "codebook file: " + datasetpath + CODEBOOK_FILE
-    print "category      ==>  label"
-    for cat in cat_label:
-        print '{0:13} ==> {1:6d}'.format(cat, cat_label[cat])
+    print "DONE"

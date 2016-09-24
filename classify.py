@@ -1,4 +1,3 @@
-import libsvm
 import argparse
 from cPickle import load
 from learn import extractSift, computeHistograms, writeHistogramsToFile
@@ -53,5 +52,4 @@ writeHistogramsToFile(nclusters,
                       HISTOGRAMS_FILE)
 
 print "---------------------"
-print "## test data with svm"
-print libsvm.test(HISTOGRAMS_FILE, model_file)
+print "DONE"
