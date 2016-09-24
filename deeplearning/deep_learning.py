@@ -63,24 +63,6 @@ class Deep_Learning:
 
 		return image_similarity
 
-	""" takes multiple images and runs deep learning feature
-		on all images, outputting as csv file
-	"""
-	def create_deep_learning_index():
-	jpg_paths = all_jpg_paths()
-	with open('1008_vectors.csv', 'w') as output:
-		writer = csv.writer(output)
-		
-		for image_path in jpg_paths:
-			image_id = os.path.basename(image_path)
-			
-			with tf.Graph().as_default():	
-				predictions = classify_image.run_inference_on_image(image_path)
-			
-			vectorArray = predictions.tolist()
-			vectorArray.insert(0, image_id)
-			writer.writerows([vectorArray])
-
 
 	"""	Finds euclidean distance given 2 vectors
 	"""

@@ -6,15 +6,16 @@ import utility.util as util
 import math
 
 from Tkinter import *
-from pyimagesearch.colordescriptor import ColorDescriptor
-from pyimagesearch.searcher import Searcher
+from colorhistogram.colordescriptor import ColorDescriptor
+from colorhistogram.searcher import Searcher
 from PIL import Image, ImageTk
 from deeplearning.deep_learning import Deep_Learning
+from texttags.text_tags import TextTags
 
 class UI_class:
     def __init__(self, master):
         self.master = master
-        self.database_image_ids = util.get_image_ids()
+        self.database_image_ids = util.get_image_ids(util.database_path)
         self.limit = 16
         topframe = Frame(self.master, padx=240)
         topframe.pack()
@@ -67,6 +68,7 @@ class UI_class:
         #Feature objects
         self.color_hist = Searcher("./color_hist.csv")
         self.deep_learning = Deep_Learning("./deep_learning.csv")
+        self.text_tag = TextTags("./tag_text_database.csv", "./tag_text_query.csv")
 
         self.master.mainloop()
 
@@ -82,12 +84,30 @@ class UI_class:
         from tkFileDialog import askopenfilename
         self.filename = tkFileDialog.askopenfile(title='Choose an Image File').name
 
+        # find query tags
+        query_tags = []
+        if self.text_tag.return_query_tags(self.filename):
+            query_tags = self.text_tag.return_query_tags(os.path.abspath(self.filename))
+
         # show query image
         image_file = Image.open(self.filename)
         resized = image_file.resize((100, 100), Image.ANTIALIAS)
         im = ImageTk.PhotoImage(resized)
         image_label = Label(self.query_img_frame, image=im)
+
+        # show query tags
+        if query_tags:
+            image_tags = Label(self.query_img_frame, text="This image has query tags!")
+            image_tags.pack()
+        else:
+            image_tags = Label(self.query_img_frame, text="This image has no query tags!\n\n Selecting text tags search may return inaccurate results!")
+            #image_tags = Text(self.query_img_frame, width=10)
+            #image_tags.insert(END, "This image has no query tags!\n selecting text tags search will not return accurate results!\n")
+            image_tags.pack()
+
+
         image_label.pack()
+
 
         self.query_img_frame.mainloop()
 
@@ -98,14 +118,12 @@ class UI_class:
         self.result_img_frame = Frame(self.master)
         self.result_img_frame.pack()
 
-        self.check_hyper_parameters()
-
         results = self.get_search_results()
 
         # show result pictures
         COLUMNS = 4
         image_count = 0
-        image_paths = util.get_image_paths()
+        image_paths = util.get_image_group_paths(util.database_path)
        
         for (score, resultID) in results:
             # load the result image and display it
@@ -129,21 +147,30 @@ class UI_class:
         # perform the search
         # feature 1: color histogram
         # feature 2: deep learning
-        self.hyper_parameter = [0.2, 0.8, 0.0, 0.0]
-        
-        color_param = float(self.color_parameter.get())
-        deep_learning_param = float(self.deep_learning_parameter.get())
+        self.hyper_parameter = [0.1, 0.8, 0.1, 0.0]
 
-        if (math.fabs(1 - (color_param + deep_learning_param)) < 0.0000001):
-            self.hyper_parameter[0] = color_param
-            self.hyper_parameter[1] = deep_learning_param
-            #self.hyper_parameter[2] = visual_words_param
+        if self.color_parameter.get():
+            color_param = float(self.color_parameter.get())
+        if self.deep_learning_parameter.get():
+            deep_learning_param = float(self.deep_learning_parameter.get())
+        if self.text_tags_parameter.get():
+            text_tag_param = float(self.text_tags_parameter.get())
+
+        if (self.color_parameter.get() and self.deep_learning_parameter.get() and self.text_tags_parameter.get()):
+            if (math.fabs(1 - (color_param + deep_learning_param + text_tag_param)) < 0.0000001):
+                self.hyper_parameter[0] = color_param
+                self.hyper_parameter[1] = deep_learning_param
+                self.hyper_parameter[2] = text_tag_param
+                #self.hyper_parameter[3] = visual_words_param      
 
     def get_search_results(self):
         results = {}
        
         color_hist_dict = {}
         deep_learning_dict = {}
+        text_tags_dict = {}
+
+        self.check_hyper_parameters()
         
         # do dictionary extraction here
         if (self.color_var.get() == 1):
@@ -158,25 +185,25 @@ class UI_class:
         if (self.deep_learning_var.get() == 1):
             deep_learning_dict = self.deep_learning.search_deeplearning(os.path.abspath(self.filename))
 
+        if (self.text_tags_var.get() == 1):
+            text_tags_dict = self.text_tag.tags_search(self.filename)
+
         #combine feature vectors here in a results array
         # if 0 should, should still be shown since it means they are exactly the same
         # if -1, then should be removed from array
         for name in self.database_image_ids:
-            results[name] = -1
-            if (len(color_hist_dict) > 0):
-                if name in color_hist_dict:
-                    if results[name] < 0:
-                        results[name] = 0
-                    results[name] += self.hyper_parameter[0] * color_hist_dict[name]
+            results[name] = 0
             
-            if (len(deep_learning_dict) > 0):
-                if name in deep_learning_dict:
-                    if results[name] < 0:
-                        results[name] = 0
-                    results[name] += self.hyper_parameter[1] * deep_learning_dict[name]
-            
-            if results[name] == -1:
-                del results[name]
+            if color_hist_dict:
+                results[name] += self.hyper_parameter[0] * color_hist_dict[name]
+        
+            if deep_learning_dict:
+                
+                results[name] += self.hyper_parameter[1] * deep_learning_dict[name]
+        
+            if text_tags_dict:
+
+                results[name] += self.hyper_parameter[2] * text_tags_dict[name]                
 
         #sort results and show only top 10
         if (len(results) > 0):

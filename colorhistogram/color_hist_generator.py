@@ -8,7 +8,7 @@ import utility.util as util
 
 
 #the appended list of directories
-all_image_paths = util.image_paths()
+all_image_paths = util.get_image_group_paths(util.database_path)
 
 # initialize the color descriptor
 cd = ColorDescriptor((8, 12, 3))
