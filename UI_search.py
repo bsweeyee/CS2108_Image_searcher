@@ -100,11 +100,8 @@ class UI_class:
             image_tags = Label(self.query_img_frame, text="This image has query tags!")
             image_tags.pack()
         else:
-            image_tags = Label(self.query_img_frame, text="This image has no query tags!\n\n Selecting text tags search may return inaccurate results!")
-            #image_tags = Text(self.query_img_frame, width=10)
-            #image_tags.insert(END, "This image has no query tags!\n selecting text tags search will not return accurate results!\n")
+            image_tags = Label(self.query_img_frame, text="This image has no query tags!\n\n Selecting text tags search will not result in a search in text tags")
             image_tags.pack()
-
 
         image_label.pack()
 
@@ -185,38 +182,46 @@ class UI_class:
         if (self.deep_learning_var.get() == 1):
             deep_learning_dict = self.deep_learning.search_deeplearning(os.path.abspath(self.filename))
 
-        if (self.text_tags_var.get() == 1):
+        # checkbox must be checked and there must be query tags before search is done
+        if (self.text_tags_var.get() == 1 and self.text_tag.return_query_tags(self.filename)):
             text_tags_dict = self.text_tag.tags_search(self.filename)
 
         #combine feature vectors here in a results array
         # if 0 should, should still be shown since it means they are exactly the same
         # if -1, then should be removed from array
         for name in self.database_image_ids:
-            results[name] = 0
-            
+            results[name] = -1
             if color_hist_dict:
+                if results[name] < 0:
+                    results[name] = 0
                 results[name] += self.hyper_parameter[0] * color_hist_dict[name]
-        
             if deep_learning_dict:
-                
+                if results[name] < 0:
+                    results[name] = 0
                 results[name] += self.hyper_parameter[1] * deep_learning_dict[name]
-        
             if text_tags_dict:
-
+                if results[name] < 0:
+                    results[name] = 0
                 results[name] += self.hyper_parameter[2] * text_tags_dict[name]                
 
-        #sort results and show only top 10
+        #sort results and show only top 16
         if (len(results) > 0):
             results = sorted([(v, k) for (k, v) in results.items()])
             results = results[:self.limit]
+        
+        # makes sure that any element which do not have a valid score is removed from results
+        for element in results:
+            if element[0] < 0:
+                results.remove(element)
 
         return results
 
     # return image results from search
-    def get_image_search_results(self, file_path, color_var=0, deep_learning_var=0):
+    def get_image_search_results(self, file_path, color_var=0, deep_learning_var=0, text_tags_var=0):
         self.filename = file_path
         self.color_var.set(color_var)
         self.deep_learning_var.set(deep_learning_var)
+        self.text_tags_var.set(text_tags_var)
         return self.get_search_results()
         
 

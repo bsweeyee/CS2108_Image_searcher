@@ -41,9 +41,9 @@ class TextTags(object):
 	# calculate cosine similarity
 	# assumptions: no repeat tags, 1:1 search case 
 	# 			   with no word stemming
-	# returns the number of matches/number of database_tags 
-	# i.e. the probability that query is similar to database image
-	# -> higher the number, the more likely it is the same
+	# returns the distance between the number of tags in the database with the
+	# number of matching tags 
+	# i.e. the higher the count is, the lower the distance, hence the more similar it is with the image
 	def calculate_distance(self, query_tags, database_tags):
 		distance = 0.0
 		count = 0.0

@@ -43,7 +43,8 @@ def get_jpg_paths(input_path):
 	for i in xrange(len(image_paths_array)):
 		a_image_path = os.listdir(image_paths_array[i])
 		for j in xrange(len(a_image_path)):
-			jpg_paths.append(os.path.join(image_paths_array[i], a_image_path[j]))
+			if (a_image_path[j].endswith('.jpg')):
+				jpg_paths.append(os.path.join(image_paths_array[i], a_image_path[j]))
 
 	return jpg_paths
 
@@ -57,7 +58,8 @@ def get_image_ids(input_path):
 	for i in xrange(len(image_paths)):
 		a_image_path = os.listdir(image_paths[i])
 		for j in xrange(len(a_image_path)):
-			image_ids.append(a_image_path[j])
+			if (a_image_path[j].endswith('.jpg')):
+				image_ids.append(a_image_path[j])
 
 	return image_ids
 

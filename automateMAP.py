@@ -28,7 +28,7 @@ def search_from_one_category(query_category_name, query_category_paths, window):
 		#input into search
 		print "searching..."
 		# modify here to check which feature to search in
-		results_tuple = window.get_image_search_results(path, 0, 1)
+		results_tuple = window.get_image_search_results(path, 0, 0, 1)
 		result_list[os.path.basename(path)] = results_tuple
 
 	return calculate_MAP(result_list, database_category_paths)
@@ -63,7 +63,8 @@ def calculate_p(query_category, query_results, database_category_paths):
 def calculate_MAP(result_list, database_category_paths):
 	total_p = 0.0
 	for (key, value) in result_list.iteritems():
-		total_p += calculate_p(key, value, database_category_paths)
+		if value:
+			total_p += calculate_p(key, value, database_category_paths)
 
 	print "MAP print done!"
 	print total_p / len(result_list)
