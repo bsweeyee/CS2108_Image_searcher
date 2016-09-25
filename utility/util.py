@@ -9,12 +9,12 @@ import csv
 # returns a list of image category folder paths from "database" folder
 # eg. '...something.../database/alley'
 
-STUPID_DS_STORE_DATABASE = "/Users/Brandon/Dropbox/NUS/Y3S1/CS2108/Lab/Assignment_1/Our_Image_Searcher/database/.DS_Store"
-STUPID_DS_STORE_QUERY = "/Users/Brandon/Dropbox/NUS/Y3S1/CS2108/Lab/Assignment_1/Our_Image_Searcher/query/.DS_Store"
+STUPID_DS_STORE_DATABASE = "./database/.DS_Store"
+STUPID_DS_STORE_QUERY = "./query/.DS_Store"
 
 # modify this to the database path to extract from database image
-database_path = "database"
-query_path = "query"
+database_path = "./database"
+query_path = "./query"
 
 # returns a list of image paths from database
 # eg. ...something.../database/alley
@@ -56,6 +56,8 @@ def get_image_ids(input_path):
 
 	image_paths = get_image_group_paths(input_path)
 	for i in xrange(len(image_paths)):
+		if image_paths[i] == STUPID_DS_STORE_QUERY or image_paths[i] == STUPID_DS_STORE_QUERY:
+			image_paths.pop(0)
 		a_image_path = os.listdir(image_paths[i])
 		for j in xrange(len(a_image_path)):
 			if (a_image_path[j].endswith('.jpg')):
