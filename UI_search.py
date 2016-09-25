@@ -159,11 +159,12 @@ class UI_class:
         if self.visual_words_parameter.get() and self.visual_words_var.get() == 1:
             self.hyper_parameter[3] = float(self.visual_words_parameter.get())
 
+        # if user defined values does not add up to 1, use default values
         if (math.fabs(1 - (self.hyper_parameter[0] + self.hyper_parameter[1] + self.hyper_parameter[2] + self.hyper_parameter[3])) > 0.0000001):     
-            self.hyper_parameter[0] = 0.10
-            self.hyper_parameter[1] = 0.65
-            self.hyper_parameter[2] = 0.20
-            self.hyper_parameter[3] = 0.05
+            self.hyper_parameter[0] = 0.08
+            self.hyper_parameter[1] = 0.70
+            self.hyper_parameter[2] = 0.19
+            self.hyper_parameter[3] = 0.03
 
     def get_search_results(self):
         results = {}
