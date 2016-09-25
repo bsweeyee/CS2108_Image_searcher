@@ -13,8 +13,8 @@ STUPID_DS_STORE_DATABASE = "/Users/Brandon/Dropbox/NUS/Y3S1/CS2108/Lab/Assignmen
 STUPID_DS_STORE_QUERY = "/Users/Brandon/Dropbox/NUS/Y3S1/CS2108/Lab/Assignment_1/Our_Image_Searcher/query/.DS_Store"
 
 # modify this to the database path to extract from database image
-database_path = "database"
-query_path = "query"
+database_path = "./database"
+query_path = "./query"
 
 # returns a list of image paths from database
 # eg. ...something.../database/alley
