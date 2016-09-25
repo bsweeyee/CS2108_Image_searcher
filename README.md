@@ -2,11 +2,9 @@
 
 How to use:
 
-1. Go into utils.py under utility folder and change the variables for database_path and query_path to where your path is
+1. run "python UI_search.py" in console
 
-2. run "python UI_search.py" in console
-
-3. Window should pop up and search should be able to work
+2. Window should pop up and search should be able to work
 
 Generating index files:
 
