@@ -12,7 +12,7 @@ Generating index files:
 
 2. run the program to get the respective csv files
 
-3. For sift, run the learn.py file by running "python learn.py -d database"*
+3. For sift*, run the learn.py file by running "python learn.py -d database"
 
 *note sift runs only on Linux/windows systems. macOS is not supported
 
