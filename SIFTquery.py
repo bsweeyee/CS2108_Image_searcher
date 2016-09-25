@@ -12,6 +12,7 @@ import math
 DATABASEPATH =  "database"
 
 def newQuery(img_path):
+    img_path = "\"" + img_path + "\""
     img_path = "python classify.py " + img_path
     os.system(img_path)
     
