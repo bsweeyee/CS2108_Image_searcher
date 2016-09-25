@@ -68,7 +68,8 @@ class UI_class:
 
         #Feature objects
         self.color_hist = Searcher("./color_hist.csv")
-        self.deep_learning = Deep_Learning("./deep_learning.csv")
+        if os.name == 'posix':
+            self.deep_learning = Deep_Learning("./deep_learning.csv")
         self.text_tag = TextTags("./tag_text_database.csv", "./tag_text_query.csv")
 
         self.master.mainloop()
@@ -159,10 +160,10 @@ class UI_class:
             self.hyper_parameter[3] = float(self.visual_words_parameter.get())
 
         if (math.fabs(1 - (self.hyper_parameter[0] + self.hyper_parameter[1] + self.hyper_parameter[2] + self.hyper_parameter[3])) > 0.0000001):     
-            self.hyper_parameter[0] = 0.08
-            self.hyper_parameter[1] = 0.70
-            self.hyper_parameter[2] = 0.19
-            self.hyper_parameter[3] = 0.03
+            self.hyper_parameter[0] = 0.10
+            self.hyper_parameter[1] = 0.65
+            self.hyper_parameter[2] = 0.20
+            self.hyper_parameter[3] = 0.05
 
     def get_search_results(self):
         results = {}
