@@ -10,7 +10,6 @@ from Tkinter import *
 from colorhistogram.colordescriptor import ColorDescriptor
 from colorhistogram.searcher import Searcher
 from PIL import Image, ImageTk
-from deeplearning.deep_learning import Deep_Learning
 from texttags.text_tags import TextTags
 
 class UI_class:
@@ -69,6 +68,7 @@ class UI_class:
         #Feature objects
         self.color_hist = Searcher("./color_hist.csv")
         if os.name == 'posix':
+            from deeplearning.deep_learning import Deep_Learning
             self.deep_learning = Deep_Learning("./deep_learning.csv")
         self.text_tag = TextTags("./tag_text_database.csv", "./tag_text_query.csv")
 
