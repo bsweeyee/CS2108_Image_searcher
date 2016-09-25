@@ -35,7 +35,7 @@ class TextTags(object):
 		with open(self.query_tags_list) as reader:
 			csv_reader = csv.reader(reader)
 			for image_query_tags in csv_reader:
-				if query_basename in image_query_tags:
+				if unicode(query_basename) in unicode(image_query_tags):
 					image_query_tags.pop(0)
 					return image_query_tags
 
