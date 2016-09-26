@@ -23,12 +23,13 @@ def newQuery(img_path):
     f_testdata.close()
 
     #for each line in trainingdata.svm read values into training_array
-    f_trainingdata = open('trainingdata.svm','r')
+    f_trainingdata = open('reduced.svm','r')
     distances = []
 
     for line in f_trainingdata:
         trainingdata = line
-        trainingdata = getArray(trainingdata)
+        trainingdata = trainingdata.split()
+        trainingdata = map(float,trainingdata)
         distances.append(euclidDist(testdata,trainingdata))
         
     f_trainingdata.close()
