@@ -206,16 +206,16 @@ class UI_class:
                 if results[name] < 0:
                     results[name] = 0
                 results[name] += self.hyper_parameter[0] * color_hist_dict[name]
-            if deep_learning_dict:
+            if deep_learning_dict and (name in deep_learning_dict):
                 if results[name] < 0:
                     results[name] = 0
                 results[name] += self.hyper_parameter[1] * deep_learning_dict[name]
             if text_tags_dict:
-                if results[name] < 0:
+                if results[name] < 0 and (name in results):
                     results[name] = 0
                 results[name] += self.hyper_parameter[2] * text_tags_dict[name]
             if visual_words_dict:
-                if results[name] < 0:
+                if results[name] < 0 and (name in results):
                     results[name] = 0
                 results[name] += self.hyper_parameter[3] * visual_words_dict[name]
 
